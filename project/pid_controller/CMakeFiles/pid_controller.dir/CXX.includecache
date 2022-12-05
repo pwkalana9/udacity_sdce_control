@@ -90,16 +90,6 @@ spiral_base.h
 structs.h
 /home/workspace/nd013-c6-control-starter/project/pid_controller/structs.h
 
-/home/workspace/nd013-c6-control-starter/project/pid_controller/integral.cpp
-integral.h
-/home/workspace/nd013-c6-control-starter/project/pid_controller/integral.h
-array
--
-glog/logging.h
--
-gtest/gtest.h
--
-
 /home/workspace/nd013-c6-control-starter/project/pid_controller/integral.h
 functional
 -
@@ -278,16 +268,6 @@ utils.h
 velocity_profile_generator.h
 /home/workspace/nd013-c6-control-starter/project/pid_controller/velocity_profile_generator.h
 
-/home/workspace/nd013-c6-control-starter/project/pid_controller/pid_controller.cpp
-pid_controller.h
-/home/workspace/nd013-c6-control-starter/project/pid_controller/pid_controller.h
-vector
--
-iostream
--
-math.h
--
-
 /home/workspace/nd013-c6-control-starter/project/pid_controller/pid_controller.h
 
 /home/workspace/nd013-c6-control-starter/project/pid_controller/planning_params.h
@@ -311,10 +291,6 @@ vector
 -
 structs.h
 /home/workspace/nd013-c6-control-starter/project/pid_controller/structs.h
-
-/home/workspace/nd013-c6-control-starter/project/pid_controller/spiral_equations.cpp
-spiral_equations.h
-/home/workspace/nd013-c6-control-starter/project/pid_controller/spiral_equations.h
 
 /home/workspace/nd013-c6-control-starter/project/pid_controller/spiral_equations.h
 array
