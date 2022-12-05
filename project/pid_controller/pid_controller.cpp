@@ -36,6 +36,11 @@ void PID::UpdateError(double cte) {
    /**
    * Update PID errors based on cte.
    **/
+   
+   // Propotional term
+   pid_errors[0] = cte;
+   // Intergral term
+   pid_errors[1] += cte * delta_time;
    // Update differential term
    if(delta_time > 0){
       pid_errors[2] = (cte - pid_errors[0])/delta_time;
@@ -43,12 +48,6 @@ void PID::UpdateError(double cte) {
    else {
       pid_errors[2] = 0;
    }
-   // Intergral term
-   pid_errors[1] += cte * delta_time;
-   // Propotional term
-   pid_errors[0] = cte;
-   
-
 }
 
 double PID::TotalError() {
@@ -60,10 +59,13 @@ double PID::TotalError() {
     // Sum up propotional, integral and differential terms
     for(int i = 0; i < 3; i++){
        control -= pid_coeffs[i] * pid_errors[i];
+       std::cout << " PID " << i << " " << pid_errors[i];
     }
+    std::cout << " Output " << control << std::endl;
     // Clip by max and min output control values
-    control = max(pid_output_max, control);
-    control = min(pid_output_min, control);
+    control = min(pid_output_max, control);
+    control = max(pid_output_min, control);
+    std::cout << " Output x" << control << std::endl;
     return control;
 }
 
