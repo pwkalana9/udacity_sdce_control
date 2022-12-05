@@ -286,37 +286,43 @@ int main ()
           ////////////////////////////////////////
 
           /**
-          * TODO (step 3): uncomment these lines
+          * (step 3): 
           **/
-//           // Update the delta time with the previous command
-//           pid_steer.UpdateDeltaTime(new_delta_time);
+          // Update the delta time with the previous command
+          pid_steer.UpdateDeltaTime(new_delta_time);
 
           // Compute steer error
           double error_steer;
-
-
           double steer_output;
 
           /**
-          * TODO (step 3): compute the steer error (error_steer) from the position and the desired trajectory
+          * (step 3): compute the steer error (error_steer) from the position and the desired trajectory
           **/
-//           error_steer = 0;
+          double angle = 0.0;
+
+          if((x_points.size() > 0) && (y_points.size() > 0)) {
+            angle = angle_between_points(x_points[0], 
+                                         y_points[0], 
+                                         x_points[x_points.size() - 1], 
+                                         y_points[y_points.size()] - 1);
+          }
+          error_steer = yaw - angle;
 
           /**
-          * TODO (step 3): uncomment these lines
+          * (step 3): 
           **/
-//           // Compute control to apply
-//           pid_steer.UpdateError(error_steer);
-//           steer_output = pid_steer.TotalError();
+          // Compute control to apply
+          pid_steer.UpdateError(error_steer);
+          steer_output = pid_steer.TotalError();
 
-//           // Save data
-//           file_steer.seekg(std::ios::beg);
-//           for(int j=0; j < i - 1; ++j) {
-//               file_steer.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-//           }
-//           file_steer  << i ;
-//           file_steer  << " " << error_steer;
-//           file_steer  << " " << steer_output << endl;
+          // Save data
+          file_steer.seekg(std::ios::beg);
+          for(int j=0; j < i - 1; ++j) {
+              file_steer.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+          }
+          file_steer  << i ;
+          file_steer  << " " << error_steer;
+          file_steer  << " " << steer_output << endl;
 
           ////////////////////////////////////////
           // Throttle control
@@ -335,8 +341,6 @@ int main ()
           **/
           // modify the following line for step 2
           error_throttle = velocity - v_points.back();
-
-
 
           double throttle_output;
           double brake_output;
