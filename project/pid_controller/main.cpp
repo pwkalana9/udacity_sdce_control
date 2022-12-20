@@ -309,8 +309,10 @@ int main ()
               close_id = i;
             }
           }
-          error_steer = yaw - angle;
 
+
+          error_steer = angle_between_points(x_position,y_position,x_points[close_id],y_points[close_id]) - yaw;
+          
           /**
           * (step 3): 
           **/
