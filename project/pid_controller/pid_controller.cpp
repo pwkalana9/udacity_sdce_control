@@ -37,10 +37,8 @@ void PID::UpdateError(double cte) {
    * Update PID errors based on cte.
    **/
    
-   // Propotional term
-   pid_errors[0] = cte;
-   // Intergral term
-   pid_errors[1] += cte * delta_time;
+
+
    // Update differential term
    if(delta_time > 0){
       pid_errors[2] = (cte - pid_errors[0])/delta_time;
@@ -48,6 +46,10 @@ void PID::UpdateError(double cte) {
    else {
       pid_errors[2] = 0;
    }
+   // Propotional term
+   pid_errors[0] = cte;
+   // Intergral term
+   pid_errors[1] += cte * delta_time;
 }
 
 double PID::TotalError() {

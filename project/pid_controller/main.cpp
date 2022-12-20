@@ -220,13 +220,13 @@ int main ()
   /**
   * (Step 1): create pid (pid_steer) for steer command and initialize values
   **/
-  pid_steer.Init(0.4, 0.001, 0.0, 1.5, -1.5);
+   pid_steer.Init(0.29, 0.0011,0.71, 1.2, -1.2);
 
   // initialize pid throttle
   /**
   * (Step 1): create pid (pid_throttle) for throttle command and initialize values
   **/
-  pid_throttle.Init(0.2, 0.001, 0.02, 1, -1);
+  pid_throttle.Init(0.21,0.001,0.019, 1, -1);
 
   h.onMessage([&pid_steer, &pid_throttle, &new_delta_time, &timer, &prev_timer, &i, &prev_timer](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
   {
@@ -294,17 +294,20 @@ int main ()
           // Compute steer error
           double error_steer;
           double steer_output;
+          double dis_min = 10000.0;
+          int close_id = 0;
 
           /**
           * (step 3): compute the steer error (error_steer) from the position and the desired trajectory
           **/
-          double angle = 0.0;
-
-          if((x_points.size() > 0) && (y_points.size() > 0)) {
-            angle = angle_between_points(x_points[0], 
-                                         y_points[0], 
-                                         x_points[x_points.size() - 1], 
-                                         y_points[y_points.size()] - 1);
+          for (int i =0; i< x_points.size(); ++i)
+          {
+            double act_dis = pow((x_position - x_points[i]),2) + pow((y_position - y_points[i]),2);
+            if (act_dis < dis_min)
+            {
+              dis_min = act_dis;
+              close_id = i;
+            }
           }
           error_steer = yaw - angle;
 
@@ -339,9 +342,10 @@ int main ()
           /**
           * (step 2): compute the throttle error (error_throttle) from the position and the desired speed
           **/
-          // modify the following line for step 2
-          error_throttle = velocity - v_points.back();
-
+           // modify the following line for step 2
+		      error_throttle = 0;
+//           error_throttle =  velocity - accumulate(v_points.begin(), v_points.end(), 0)/v_points.size();
+		  error_throttle = v_points[close_id] - velocity;
           double throttle_output;
           double brake_output;
 
