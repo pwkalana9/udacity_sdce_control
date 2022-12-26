@@ -64,9 +64,6 @@ void PID::UpdateError(double cte) {
       pid_errors[2] = (cte - prev_error)/delta_time;
    }
     prev_error = cte;
-   }
-
-
 }
 
 double PID::TotalError() {
