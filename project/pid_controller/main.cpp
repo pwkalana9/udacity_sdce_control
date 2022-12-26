@@ -245,6 +245,7 @@ int main ()
           vector<double> x_points = data["traj_x"];
           vector<double> y_points = data["traj_y"];
           vector<double> v_points = data["traj_v"];
+          // print(v_points);
           double yaw = data["yaw"];
           double velocity = data["velocity"];
           double sim_time = data["time"];
@@ -346,7 +347,10 @@ int main ()
           * (step 2): compute the throttle error (error_throttle) from the position and the desired speed
           **/
           // modify the following line for step 2 as mentioned in project requirements
-          error_throttle = v_points.back()-velocity; 
+          double desired_speed = v_points.back();
+          std::cout << " Desired speeed " << desired_speed << endl;
+          error_throttle = desired_speed - velocity; 
+          std::cout << " Error throttle " << error_throttle << endl;
           double throttle_output;
           double brake_output;
 
