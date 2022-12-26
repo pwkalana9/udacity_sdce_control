@@ -18,6 +18,7 @@ public:
     * Errors
     */
     double pid_errors[3];
+    double prev_error;
 
     /*
     * Coefficients
@@ -29,6 +30,8 @@ public:
     */
     double pid_output_max;
     double pid_output_min;
+    double pid_min_integral;
+    double pid_max_integral;
   
     /*
     * Delta time

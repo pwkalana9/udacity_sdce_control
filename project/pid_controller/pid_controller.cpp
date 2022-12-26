@@ -28,6 +28,7 @@ void PID::Init(double Kpi, double Kii, double Kdi, double output_lim_maxi, doubl
    pid_coeffs[2] = Kdi;
    pid_output_max = output_lim_maxi;
    pid_output_min = output_lim_mini;
+   prev_error = 0;
 
 }
 
@@ -36,20 +37,36 @@ void PID::UpdateError(double cte) {
    /**
    * Update PID errors based on cte.
    **/
-   
+      // Intergral term
+   pid_errors[1] += cte * delta_time;
+
+
+   // Propotional term
+   pid_errors[0] = cte;
+
+   if (pid_output_max > pid_error[0])
+      pid_max_integral = pid_output_max - pid_errors[0];
+   else
+      pid_max_integral = 0.0;
+
+   if (pid_output_min < pid_errors[0])
+     pid_min_integral = pid_output_min - pid_errors[0];
+   else
+     pid_min_integral = 0.0;
+  if (pid_errors[1] > pid_max_integral)
+     pid_errors[1] = pid_max_integral;
+  else if (pid_errors[1] < pid_min_integral)
+    pid_errors[1] = pid_min_integral;
 
 
    // Update differential term
    if(delta_time > 0){
-      pid_errors[2] = (cte - pid_errors[0])/delta_time;
+      pid_errors[2] = (cte - prev_error)/delta_time;
    }
-   else {
-      pid_errors[2] = 0;
+    prev_error = cte;
    }
-   // Propotional term
-   pid_errors[0] = cte;
-   // Intergral term
-   pid_errors[1] += cte * delta_time;
+
+
 }
 
 double PID::TotalError() {
