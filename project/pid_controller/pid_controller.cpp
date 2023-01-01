@@ -23,15 +23,14 @@ void PID::Init(double Kpi, double Kii, double Kdi, double output_lim_maxi, doubl
    {
       pid_errors[i] = 0;
    }
+   // assigne the P, I, D coefficients to the controller variables.
    pid_coeffs[0] = Kpi;
    pid_coeffs[1] = Kii;
    pid_coeffs[2] = Kdi;
-   pid_output_max = output_lim_maxi;
-   pid_output_min = output_lim_mini;
+   pid_output_max = output_lim_maxi; // maximum output limit
+   pid_output_min = output_lim_mini; // minimum output limit
    prev_error = 0;
-
 }
-
 
 void PID::UpdateError(double cte) {
    /**
@@ -40,32 +39,34 @@ void PID::UpdateError(double cte) {
       // Intergral term
    pid_errors[1] += cte * delta_time;
 
-
    // Propotional term
    pid_errors[0] = cte;
 
+   // recompute pid maximum integral value
    if (pid_output_max > pid_errors[0])
       pid_max_integral = pid_output_max - pid_errors[0];
    else
       pid_max_integral = 0.0;
 
+   // recompute pid minimum integral value
    if (pid_output_min < pid_errors[0])
      pid_min_integral = pid_output_min - pid_errors[0];
    else
      pid_min_integral = 0.0;
+
+  // bound the PID, integral error within the previously computed maximum and minimum integral errors   
   if (pid_errors[1] > pid_max_integral)
      pid_errors[1] = pid_max_integral;
   else if (pid_errors[1] < pid_min_integral)
     pid_errors[1] = pid_min_integral;
-
 
    // Update differential term
    if(delta_time > 0){
       pid_errors[2] = (cte - prev_error)/delta_time;
    }
     prev_error = cte;
-    std::cout << " Integral min " << pid_min_integral << " max " << pid_max_integral << endl;
-    std::cout << " P " << pid_errors[0] << " I " << pid_errors[1] << " D " << pid_errors[2] << endl;
+    // std::cout << " Integral min " << pid_min_integral << " max " << pid_max_integral << endl;
+    // std::cout << " P " << pid_errors[0] << " I " << pid_errors[1] << " D " << pid_errors[2] << endl;
 }
 
 double PID::TotalError() {
@@ -77,13 +78,13 @@ double PID::TotalError() {
     // Sum up propotional, integral and differential terms
     for(int i = 0; i < 3; i++){
        control += pid_coeffs[i] * pid_errors[i];
-       std::cout << " PID " << i << " " << pid_errors[i]*pid_coeffs[i];
+       // std::cout << " PID " << i << " " << pid_errors[i]*pid_coeffs[i];
     }
-    std::cout << " Output " << control << std::endl;
+    // std::cout << " Output before output limitting " << control << std::endl;
     // Clip by max and min output control values
     control = min(pid_output_max, control);
     control = max(pid_output_min, control);
-    std::cout << " Output x" << control << std::endl;
+    // std::cout << " Output after output limitting" << control << std::endl;
     return control;
 }
 

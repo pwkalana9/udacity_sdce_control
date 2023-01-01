@@ -180,8 +180,6 @@ void path_planner(vector<double>& x_points, vector<double>& y_points, vector<dou
     y_points.push_back(point_y);
     v_points.push_back(velocity);
   }
-
-
 }
 
 void set_obst(vector<double> x_points, vector<double> y_points, vector<State>& obstacles, bool& obst_flag){
@@ -214,6 +212,7 @@ int main ()
   time_t timer;
   time(&prev_timer);
     
+  // create PID objects for steering and throttle control
   PID pid_steer = PID();
   PID pid_throttle = PID();
   // initialize pid steer
@@ -303,6 +302,7 @@ int main ()
           **/
           for (int i =0; i< x_points.size(); i++)
           {
+            // compute the actual distance and distance to the closest trajectory point
             double dist = pow((x_position - x_points[close_id]),2) + pow((y_position - y_points[close_id]),2);
             double act_dis = pow((x_position - x_points[i]),2) + pow((y_position - y_points[i]),2);
             if (act_dis < dist)
@@ -310,9 +310,7 @@ int main ()
               close_id = i;
             }
           }
-          // error_steer = yaw -angle_between_points(x_points[close_id], y_points[close_id],x_position,y_position);
-
-
+          // compute the angle between the desired steer and actual steering angle
           error_steer = angle_between_points(x_position,y_position,x_points[close_id],y_points[close_id]) - yaw;
           
           /**
@@ -348,9 +346,9 @@ int main ()
           **/
           // modify the following line for step 2 as mentioned in project requirements
           double desired_speed = v_points.back();
-          std::cout << " Desired speeed " << desired_speed << endl;
+          // std::cout << " Desired speeed " << desired_speed << endl;
           error_throttle = desired_speed - velocity; 
-          std::cout << " Error throttle " << error_throttle << endl;
+          // std::cout << " Error throttle " << error_throttle << endl;
           double throttle_output;
           double brake_output;
 
@@ -360,7 +358,7 @@ int main ()
            // Compute control to apply
           pid_throttle.UpdateError(error_throttle);
           double throttle = pid_throttle.TotalError();
-          std::cout <<  "Throttle " << throttle << std::endl;
+          // std::cout <<  "Throttle " << throttle << std::endl;
 
            // Adapt the negative throttle to break
           if (throttle > 0.0) {
